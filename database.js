@@ -23,9 +23,9 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                 console.log('table already created')
             }else{
                 // Table just created, creating some rows
-                var insert = 'INSERT INTO user (name, email, password) VALUES (?,?,?)'
-                db.run(insert, ["admin","admin@example.com",md5("admin123456")])
-                db.run(insert, ["user","user@example.com",md5("user123456")])
+                var insert_users = 'INSERT INTO user (name, email, password) VALUES (?,?,?)'
+                db.run(insert_users, ["admin","admin@example.com",md5("admin123456")])
+                db.run(insert_users, ["user","user@example.com",md5("user123456")])
             }
         }); 
         db.run(`CREATE TABLE claimant (

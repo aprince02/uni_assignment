@@ -31,6 +31,21 @@ app.get("/api/users", (req, res, next) => {
       });
 });
 
+app.get("/api/user/:id", (req, res, next) => {
+    var sql = "select * from user where id = ?"
+    var params = [req.params.id]
+    db.get(sql, params, (err, row) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":row
+        })
+      });
+});
+
 // Default response for any other request
 app.use(function(req, res){
     res.status(404);
