@@ -27,6 +27,16 @@ app.get("/claimants", (req, res) => {
     });
   });
 
+// GET /edit/5
+app.get("/edit/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM claimant WHERE id = ?";
+    db.get(sql, id, (err, row) => {
+      // if (err) ...
+      res.render("edit", { claimant: row });
+    });
+  });
+
 app.get("/bank_account", (req, res) => {
     res.render("bank_account");
     console.log("GET: bank account page")
