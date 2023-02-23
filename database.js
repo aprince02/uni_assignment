@@ -43,7 +43,10 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                 console.log('table already created')
             }else{
                 // Table just created, creating some rows
-                
+                var insert_claimants = 'INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, bank_account_id) VALUES (?,?,?,?,?)'
+                db.run(insert_claimants, ["John", "Doe", "01-01-2000", "ACTIVE", "100001"])
+                db.run(insert_claimants, ["Mary", "Anne", "01-01-2000", "ACTIVE", "100002"])
+                db.run(insert_claimants, ["Sam", "Smith", "01-01-2000", "EXPIRED", "100003"])
             }
         });  
         db.run(`CREATE TABLE bank_account (
