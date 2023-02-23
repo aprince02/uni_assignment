@@ -4,6 +4,8 @@ var app = express()
 var db = require("./database.js")
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: false }));
 
 // Server port
 var HTTP_PORT = 8000 
@@ -24,6 +26,28 @@ app.get("/claimants", (req, res) => {
         }
     res.render("claimants", {model: rows });
     console.log("GET: view all claimants details")
+    });
+  });
+
+// GET /edit/id
+app.get("/edit/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM claimant WHERE id = ?";
+    db.get(sql, id, (err, row) => {
+      // if (err) ...
+      res.render("edit", { claimant: row });
+    });
+  });
+
+// POST /edit/id
+app.post("/edit/:id", (req, res) => {
+    const id = req.params.id;
+    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, id];
+    const sql = "UPDATE claimant SET first_name = ?, surname = ?, date_of_birth = ? WHERE (id = ?)";
+    db.run(sql, claimant, err => {
+      // if (err) ...
+      console.log("UPDATE: updated claimant details for claimant with ID: %ID%".replace("%ID%", req.params.id))
+      res.redirect("/claimants");
     });
   });
 

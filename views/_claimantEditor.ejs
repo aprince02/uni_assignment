@@ -1,0 +1,28 @@
+<div class="form-group row">
+    <label class="col-form-label col-sm-2" for="first_name">First Name</label>
+    <div class="col-sm-8">
+      <input autofocus class="form-control" name="first_name" value="<%= claimant.first_name %>" />
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2" for="surname">Surname</label>
+    <div class="col-sm-7">
+      <input class="form-control" name="surname" value="<%= claimant.surname %>" />
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2" for="date_of_birth">Date of Birth</label>
+    <div class="col-sm-10">
+      <input type="date" class="form-control" cols="20" name="date_of_birth" maxlength="32000" value="<%= claimant.date_of_birth %>" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2" for="claimStatus">Claim Status</label>
+    <div class="col-sm-7">
+      <input class="form-control" name="claimStatus" value="<%= claimant.claim_status %>" readonly/>
+    </div>
+  </div>
+  

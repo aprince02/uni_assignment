@@ -20,9 +20,9 @@
     <tbody>
       <% for (const claimant of model) { %>
         <tr>
-          <td><%= claimant.id %></td>  
-          <td><%= claimant.first_name %></td>
-          <td><%= claimant.surname %></td>
+          <td ><a href="/edit/<%= claimant.id %>"><%= claimant.id %></a></td>
+          <td><a href="/edit/<%= claimant.id %>"><%= claimant.first_name %></a></td>
+          <td><a href="/edit/<%= claimant.id %>"><%= claimant.surname %></a></td>
           <td><%= claimant.date_of_birth %></td>
           <td><%= claimant.claim_status %></td>
           <td><%= claimant.bank_account_id %></td>
