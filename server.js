@@ -17,7 +17,7 @@ app.get("/", (req, res) =>  {
   });
 
 app.get("/claimants", (req, res) => {
-    const sql = "SELECT * FROM claimant"
+    const sql = "SELECT * FROM claimant ORDER BY id ASC"
     db.all(sql, [], (err, rows) => {
         if (err) {
           return console.error(err.message);
