@@ -23,7 +23,7 @@ app.get("/claimants", (req, res) => {
           return console.error(err.message);
         }
     res.render("claimants", {model: rows });
-    console.log("GET: claimants page")
+    console.log("GET: view all claimants details")
     });
   });
 
