@@ -87,12 +87,6 @@ app.post("/delete/:id", (req, res) => {
       res.redirect("/claimants");
     });
   });
-
-app.get("/bank_account", (req, res) => {
-    res.render("bank_account");
-    console.log("GET: bank account page")
-  });
-
 app.get("/payments", (req, res) => {
     res.render("payments");
     console.log("GET: payments page")
