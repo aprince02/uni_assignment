@@ -2,4 +2,34 @@
 
 <h1>Payments page</h1>
 
+<div class="table-responsive-sm">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Payment Status</th>
+          <th class="d-print-none">
+            <a class="btn btn-sm btn-success" href="/create">Add</a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const payments of model) { %>
+          <tr>
+            <td ><%= payments.id %></td>
+            <td>£<%= payments.amount %></td>
+            <td><%= payments.date %></td>
+            <td><%= payments.payment_status %></td>
+            <td class="d-print-none">
+              <a class="btn btn-sm btn-warning" href="/edit/<%= payments.id %>">Edit</a>
+              <a class="btn btn-sm btn-danger" href="/delete/<%= payments.id %>">Delete</a>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  
 <%- include("_footer") -%>

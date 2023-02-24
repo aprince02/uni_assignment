@@ -87,10 +87,19 @@ app.post("/delete/:id", (req, res) => {
       res.redirect("/claimants");
     });
   });
-app.get("/payments", (req, res) => {
-    res.render("payments");
-    console.log("GET: payments page")
+
+app.get("/payments/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM payments WHERE claimant_id = ?";
+    db.all(sql, id, (err, rows) => {
+        if (err) {
+          return console.error(err.message);
+        }
+    res.render("payments", {model: rows });
+    console.log("GET: view all payments details")
   });
+  
+    });
 
 // Insert here other API endpoints
 
