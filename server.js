@@ -32,8 +32,8 @@ app.get("/claimants", (req, res) => {
 // GET /edit/id
 app.get("/edit/:id", (req, res) => {
     const id = req.params.id;
-    const sql = "SELECT * FROM claimant WHERE id = ?";
-    db.get(sql, id, (err, row) => {
+    const claimant_sql = "SELECT * FROM claimant WHERE id = ?";
+    db.get(claimant_sql, id, (err, row) => {
       // if (err) ...
       res.render("edit", { claimant: row });
     });
@@ -42,8 +42,8 @@ app.get("/edit/:id", (req, res) => {
 // POST /edit/id
 app.post("/edit/:id", (req, res) => {
     const id = req.params.id;
-    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, id];
-    const sql = "UPDATE claimant SET first_name = ?, surname = ?, date_of_birth = ? WHERE (id = ?)";
+    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, req.body.sort_code, req.body.account_number, id];
+    const sql = "UPDATE claimant SET first_name = ?, surname = ?, date_of_birth = ?, sort_code = ?, account_number = ? WHERE (id = ?)";
     db.run(sql, claimant, err => {
       // if (err) ...
       console.log("UPDATE: updated claimant details for claimant with ID: %ID%".replace("%ID%", req.params.id))
@@ -58,19 +58,13 @@ app.get("/create", (req, res) => {
 
 // POST /create
 app.post("/create", (req, res) => {
-    const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status) VALUES (?, ?, ?, ?)";
-    const bank_sql = "INSERT INTO bank_account (sort_code, account_number) VALUES (?, ?)";
-    const bank = [req.body.sort_code, req.body.account_number];
+    const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, sort_code, account_number) VALUES (?, ?, ?, ?, ?, ?)";
     const status = "ACTIVE";
-    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status];
+    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, req.body.sort_code, req.body.account_number, status];
     db.run(claimant_sql, claimant, err => {
       // if (err) ...
       
     });
-    db.run(bank_sql, bank, err => {
-        // if (err) ...
-        
-      });
     res.redirect("/claimants");
   });
 

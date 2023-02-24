@@ -34,24 +34,6 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             surname text,
             date_of_birth date,
             claim_status text,
-            bank_account_id INTEGER,
-            CONSTRAINT bank_account_id_unique UNIQUE (bank_account_id)
-            )`,
-        (err) => {
-            if (err) {
-                // Table already created
-                console.log('table already created')
-            }else{
-                // Table just created, creating some rows
-                var insert_claimants = 'INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, bank_account_id) VALUES (?,?,?,?,?)'
-                db.run(insert_claimants, ["John", "Doe", "2000-01-01", "ACTIVE", "1"])
-                db.run(insert_claimants, ["Mary", "Anne", "2000-01-01", "ACTIVE", "2"])
-                db.run(insert_claimants, ["Sam", "Smith", "2000-01-01", "EXPIRED", "3"])
-            }
-        });  
-        db.run(`CREATE TABLE bank_account (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            claimant_id id,
             sort_code INTEGER,
             account_number INTEGER
             )`,
@@ -61,9 +43,12 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                 console.log('table already created')
             }else{
                 // Table just created, creating some rows
-                
+                var insert_claimants = 'INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, sort_code, account_number) VALUES (?,?,?,?,?,?)'
+                db.run(insert_claimants, ["John", "Doe", "2000-01-01", "ACTIVE", "123456", "12345678"])
+                db.run(insert_claimants, ["Mary", "Anne", "2000-01-01", "ACTIVE", "123456", "12345678"])
+                db.run(insert_claimants, ["Sam", "Smith", "2000-01-01", "EXPIRED", "123456", "12345678"])
             }
-        }); 
+        });  
     }
 });
 

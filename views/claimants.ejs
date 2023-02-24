@@ -11,7 +11,6 @@
         <th>Surname</th>
         <th>Date of Birth</th>
         <th>Claim Status</th>
-        <th>Bank Account ID</th>
         <th class="d-print-none">
           <a class="btn btn-sm btn-success" href="/create">Add</a>
         </th>
@@ -25,7 +24,6 @@
           <td><a href="/edit/<%= claimant.id %>"><%= claimant.surname %></a></td>
           <td><%= claimant.date_of_birth %></td>
           <td><%= claimant.claim_status %></td>
-          <td><%= claimant.bank_account_id %></td>
           <td class="d-print-none">
             <a class="btn btn-sm btn-warning" href="/edit/<%= claimant.id %>">Edit</a>
             <a class="btn btn-sm btn-danger" href="/delete/<%= claimant.id %>">Delete</a>
