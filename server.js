@@ -60,7 +60,7 @@ app.get("/create", (req, res) => {
 app.post("/create", (req, res) => {
     const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, sort_code, account_number) VALUES (?, ?, ?, ?, ?, ?)";
     const status = "ACTIVE";
-    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, req.body.sort_code, req.body.account_number, status];
+    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status,  req.body.sort_code, req.body.account_number];
     db.run(claimant_sql, claimant, err => {
       // if (err) ...
       
