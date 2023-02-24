@@ -44,9 +44,9 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             }else{
                 // Table just created, creating some rows
                 var insert_claimants = 'INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, bank_account_id) VALUES (?,?,?,?,?)'
-                db.run(insert_claimants, ["John", "Doe", "2000-01-01", "ACTIVE", "100001"])
-                db.run(insert_claimants, ["Mary", "Anne", "2000-01-01", "ACTIVE", "100002"])
-                db.run(insert_claimants, ["Sam", "Smith", "2000-01-01", "EXPIRED", "100003"])
+                db.run(insert_claimants, ["John", "Doe", "2000-01-01", "ACTIVE", "1"])
+                db.run(insert_claimants, ["Mary", "Anne", "2000-01-01", "ACTIVE", "2"])
+                db.run(insert_claimants, ["Sam", "Smith", "2000-01-01", "EXPIRED", "3"])
             }
         });  
         db.run(`CREATE TABLE bank_account (

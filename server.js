@@ -51,6 +51,49 @@ app.post("/edit/:id", (req, res) => {
     });
   });
 
+  // GET /create
+app.get("/create", (req, res) => {
+    res.render("create", { claimant: {}, bank_account: {} });
+  });
+
+// POST /create
+app.post("/create", (req, res) => {
+    const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status) VALUES (?, ?, ?, ?)";
+    const bank_sql = "INSERT INTO bank_account (sort_code, account_number) VALUES (?, ?)";
+    const bank = [req.body.sort_code, req.body.account_number];
+    const status = "ACTIVE";
+    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status];
+    db.run(claimant_sql, claimant, err => {
+      // if (err) ...
+      
+    });
+    db.run(bank_sql, bank, err => {
+        // if (err) ...
+        
+      });
+    res.redirect("/claimants");
+  });
+
+  // GET /delete/id
+app.get("/delete/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM claimant WHERE id = ?";
+    db.get(sql, id, (err, row) => {
+      // if (err) ...
+      res.render("delete", { claimant: row });
+    });
+  });
+
+  // POST /delete/id
+app.post("/delete/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM claimant WHERE id = ?";
+    db.run(sql, id, err => {
+      // if (err) ...
+      res.redirect("/claimants");
+    });
+  });
+
 app.get("/bank_account", (req, res) => {
     res.render("bank_account");
     console.log("GET: bank account page")
