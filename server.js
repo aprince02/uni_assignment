@@ -133,6 +133,14 @@ app.get("/api/user/:id", (req, res, next) => {
       });
 });
 
+app.get("/register", (req, res) =>  {
+    res.render("register");
+  });
+
+  app.get("/login", (req, res) =>  {
+    res.render("login");
+  });
+
 // Default response for any other request
 app.use(function(req, res){
     res.status(404);
