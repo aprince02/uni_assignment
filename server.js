@@ -153,6 +153,28 @@ app.get("/register", (req, res) =>  {
     res.render("login");
   });
 
+  app.get("/add-payment/:id", (req, res) => {
+    const id = req.params.id;
+    const payments_sql = "SELECT * FROM payments WHERE id = ?";
+    db.get(payments_sql, id, (err, row) => {
+      // if (err) ...
+      res.render("add-payment", { claimant: row });
+    });
+  });
+
+  app.post("/add-payment/:id", (req, res) => {
+    const payment_sql = "INSERT INTO payments (claimant_id, amount, date, payment_status) VALUES (?, ?, ?, ?)";
+    const pending_status = "PENDING";
+    const id = req.params.id;
+    const date_today = Date.now();
+    const payment = [id, req.body.amount, date_today, pending_status];
+    db.run(payment_sql, payment, err => {
+      // if (err) ...
+      res.redirect("/claimants");
+      
+    });
+  });
+
 // Default response for any other request
 app.use(function(req, res){
     res.status(404);

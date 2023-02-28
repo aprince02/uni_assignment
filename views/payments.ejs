@@ -10,9 +10,6 @@
           <th>Amount</th>
           <th>Date</th>
           <th>Payment Status</th>
-          <th class="d-print-none">
-            <a class="btn btn-sm btn-success" href="/create">Add</a>
-          </th>
         </tr>
       </thead>
       <tbody>
@@ -22,14 +19,16 @@
             <td>£<%= payments.amount %></td>
             <td><%= payments.date %></td>
             <td><%= payments.payment_status %></td>
-            <td class="d-print-none">
-              <a class="btn btn-sm btn-warning" href="/edit/<%= payments.id %>">Edit</a>
-              <a class="btn btn-sm btn-danger" href="/delete/<%= payments.id %>">Delete</a>
-            </td>
+
+          </tr>
+          <tr>
+            <a class="btn btn-default btn-success" href="/add-payment/<%= payments.claimant_id %>">Add</a>
+            <a class="btn btn-outline-dark cancel" href="/claimants">Return</a>
           </tr>
         <% } %>
       </tbody>
     </table>
+    
   </div>
   
 <%- include("_footer") -%>
