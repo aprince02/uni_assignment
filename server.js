@@ -6,6 +6,7 @@ app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
+var md5 = require('md5')
 
 // Server port
 var HTTP_PORT = 8000 
@@ -135,6 +136,17 @@ app.get("/api/user/:id", (req, res, next) => {
 
 app.get("/register", (req, res) =>  {
     res.render("register");
+  });
+
+  app.post("/register", (req, res) => {
+    const user_sql = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
+    const password = md5(req.body.password);
+    const user = [req.body.username, req.body.email, password];
+    db.run(user_sql, user, err => {
+      // if (err) ...
+      
+    });
+    res.redirect("/");
   });
 
   app.get("/login", (req, res) =>  {
