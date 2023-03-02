@@ -21,11 +21,9 @@
             <td><%= payments.payment_status %></td>
 
           </tr>
-          <tr>
-            <a class="btn btn-default btn-success" href="/add-payment/<%= payments.claimant_id %>">Add</a>
-            <a class="btn btn-outline-dark cancel" href="/claimants">Return</a>
-          </tr>
         <% } %>
+        <a class="btn btn-default btn-success" href="/add-payment/<%= id %>">Add</a>
+        <a class="btn btn-outline-dark cancel" href="/claimants">Return</a>
       </tbody>
     </table>
     

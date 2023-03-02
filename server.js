@@ -96,7 +96,7 @@ app.get("/payments/:id", (req, res) => {
         if (err) {
           return console.error(err.message);
         }
-    res.render("payments", {model: rows });
+    res.render("payments", {model: rows, id: id });
     console.log("GET: view all payments details")
   });
   
@@ -158,7 +158,7 @@ app.get("/register", (req, res) =>  {
     const payments_sql = "SELECT * FROM payments WHERE id = ?";
     db.get(payments_sql, id, (err, row) => {
       // if (err) ...
-      res.render("add-payment", { claimant: row });
+      res.render("add-payment", { claimant: row, id: id });
     });
   });
 
