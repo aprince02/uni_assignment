@@ -166,8 +166,8 @@ app.get("/register", (req, res) =>  {
     const payment_sql = "INSERT INTO payments (claimant_id, amount, date, payment_status) VALUES (?, ?, ?, ?)";
     const pending_status = "PENDING";
     const id = req.params.id;
-    const date_today = Date.now();
-    const payment = [id, req.body.amount, date_today, pending_status];
+    
+    const payment = [id, req.body.amount, formatted_date(), pending_status];
     db.run(payment_sql, payment, err => {
       // if (err) ...
       res.redirect("/claimants");
@@ -179,3 +179,17 @@ app.get("/register", (req, res) =>  {
 app.use(function(req, res){
     res.status(404);
 });
+function formatted_date() {
+    var date_today = new Date();
+    var dd = date_today.getDate();
+    var mm = date_today.getMonth()+1;
+    var yyyy = date_today.getFullYear();
+    if(dd<10) {
+        dd='0'+dd;
+    } 
+    if(mm<10) {
+        mm='0'+mm;
+    }
+    var today = yyyy+'-'+mm+'-'+dd;
+    return today;
+}
