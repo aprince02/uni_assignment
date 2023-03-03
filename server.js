@@ -139,9 +139,10 @@ app.get("/register", (req, res) =>  {
   });
 
   app.post("/register", (req, res) => {
-    const user_sql = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
+    const user_sql = "INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)";
     const password = md5(req.body.password);
-    const user = [req.body.username, req.body.email, password];
+    const role = "user";
+    const user = [req.body.username, req.body.email, password, role];
     db.run(user_sql, user, err => {
       // if (err) ...
       
