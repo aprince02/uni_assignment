@@ -2,11 +2,21 @@
 var express = require("express")
 var app = express()
 var db = require("./database.js")
+var md5 = require('md5')
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
-var md5 = require('md5')
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true
+}));
 
 // Server port
 var HTTP_PORT = 8000 
@@ -122,6 +132,26 @@ app.get("/register", (req, res) =>  {
     res.render("login");
   });
 
+  app.post("/login", (req, res) =>  {
+    const email = req.body.email;
+    const password = req.body.password;
+    console.log(email, password);
+
+    // Check if the username and password are valid
+    if (email === 'aprince02@icloud.com' && password === 'albin') {
+        req.session.email = email;
+        res.redirect('claimants');
+    } else {
+        console.log("Error")
+        res.render('login', { error: 'Invalid username or password' });
+    }
+  });
+
+  app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
   app.get("/add-payment/:id", (req, res) => {
     const id = req.params.id;
     const payments_sql = "SELECT * FROM payments WHERE id = ?";
@@ -163,3 +193,14 @@ function formatted_date() {
     var today = yyyy+'-'+mm+'-'+dd;
     return today;
 }
+
+function requireLogin(req, res, next) {
+    if (req.session && req.session.email) {
+      // user is logged in, so continue with the next middleware
+      next();
+    } else {
+      // user is not logged in, so redirect to login page
+      res.redirect('/login');
+    }
+  }
+  
