@@ -31,12 +31,12 @@ app.get("/", (req, res) =>  {
 
 app.get("/claimants", requireLogin, (req, res) => {
     const sql = "SELECT * FROM claimant ORDER BY id ASC"
-    const email = req.session.email;
+    const loggedInName = req.session.name;
     db.all(sql, [], (err, rows) => {
         if (err) {
           return console.error(err.message);
         }
-    res.render("claimants", {model: rows, email: email});
+    res.render("claimants", {model: rows, loggedInName: loggedInName});
     console.log("GET: view all claimants details")
     });
   });
@@ -44,16 +44,18 @@ app.get("/claimants", requireLogin, (req, res) => {
 // GET /edit/id
 app.get("/edit/:id", requireLogin, (req, res) => {
     const id = req.params.id;
+    const loggedInName = req.session.name;
     const claimant_sql = "SELECT * FROM claimant WHERE id = ?";
     db.get(claimant_sql, id, (err, row) => {
       // if (err) ...
-      res.render("edit", { claimant: row });
+      res.render("edit", { claimant: row, loggedInName: loggedInName });
     });
   });
 
 // POST /edit/id
 app.post("/edit/:id", requireLogin, (req, res) => {
     const id = req.params.id;
+    const loggedInName = req.session.name;
     const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, req.body.sort_code, req.body.account_number, id];
     const sql = "UPDATE claimant SET first_name = ?, surname = ?, date_of_birth = ?, sort_code = ?, account_number = ? WHERE (id = ?)";
     db.run(sql, claimant, err => {
@@ -65,13 +67,15 @@ app.post("/edit/:id", requireLogin, (req, res) => {
 
   // GET /create
 app.get("/create", requireLogin, (req, res) => {
-    res.render("create", { claimant: {}, bank_account: {} });
+    const loggedInName = req.session.name;
+    res.render("create", { claimant: {}, bank_account: {} , loggedInName: loggedInName });
   });
 
 // POST /create
 app.post("/create", requireLogin, (req, res) => {
     const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, sort_code, account_number) VALUES (?, ?, ?, ?, ?, ?)";
     const status = "ACTIVE";
+    const loggedInName = req.session.name;
     const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status,  req.body.sort_code, req.body.account_number];
     db.run(claimant_sql, claimant, err => {
       // if (err) ...
@@ -83,10 +87,11 @@ app.post("/create", requireLogin, (req, res) => {
   // GET /delete/id
 app.get("/delete/:id", requireLogin, (req, res) => {
     const id = req.params.id;
+    const loggedInName = req.session.name;
     const sql = "SELECT * FROM claimant WHERE id = ?";
     db.get(sql, id, (err, row) => {
       // if (err) ...
-      res.render("delete", { claimant: row });
+      res.render("delete", { claimant: row, loggedInName: loggedInName });
     });
   });
 
@@ -102,12 +107,13 @@ app.post("/delete/:id", requireLogin, (req, res) => {
 
 app.get("/payments/:id", requireLogin, (req, res) => {
     const id = req.params.id;
+    const loggedInName = req.session.name;
     const sql = "SELECT * FROM payments WHERE claimant_id = ?";
     db.all(sql, id, (err, rows) => {
         if (err) {
           return console.error(err.message);
         }
-    res.render("payments", {model: rows, id: id });
+    res.render("payments", {model: rows, id: id, loggedInName: loggedInName });
     console.log("GET: view all payments details")
   });
   
@@ -136,7 +142,6 @@ app.get("/register", (req, res) =>  {
   app.post("/login", (req, res) =>  {
     const email = req.body.email;
     const password = req.body.password;
-    console.log(email, password);
     db.get('SELECT * FROM user WHERE email = ?', [email], (err, row) => {
         if (err) {
           throw err;
@@ -156,6 +161,7 @@ app.get("/register", (req, res) =>  {
         // Login successful
         console.log("success")
         req.session.email = email;
+        req.session.name = row.name;
         res.redirect('claimants');
       });
   });
@@ -167,10 +173,11 @@ app.get("/register", (req, res) =>  {
 
   app.get("/add-payment/:id", requireLogin, (req, res) => {
     const id = req.params.id;
+    const loggedInName = req.session.name;
     const payments_sql = "SELECT * FROM payments WHERE id = ?";
     db.get(payments_sql, id, (err, row) => {
       // if (err) ...
-      res.render("add-payment", { claimant: row, id: id });
+      res.render("add-payment", { claimant: row, id: id, loggedInName: loggedInName });
     });
   });
 
