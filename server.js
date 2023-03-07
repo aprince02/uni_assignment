@@ -102,38 +102,6 @@ app.get("/payments/:id", (req, res) => {
   
     });
 
-// Insert here other API endpoints
-
-app.get("/api/users", (req, res, next) => {
-    var sql = "select * from user"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "message":"success",
-            "data":rows
-        })
-      });
-});
-
-app.get("/api/user/:id", (req, res, next) => {
-    var sql = "select * from user where id = ?"
-    var params = [req.params.id]
-    db.get(sql, params, (err, row) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "message":"success",
-            "data":row
-        })
-      });
-});
-
 app.get("/register", (req, res) =>  {
     res.render("register");
   });
@@ -180,6 +148,7 @@ app.get("/register", (req, res) =>  {
 app.use(function(req, res){
     res.status(404);
 });
+
 function formatted_date() {
     var date_today = new Date();
     var dd = date_today.getDate();
