@@ -1,0 +1,21 @@
+<%- include("_header") -%>
+
+<h1>Registration page</h1>
+
+<form action="/register" method="post">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2" for="username">Username</label>
+        <div class="col-sm-7">
+          <input required placeholder="Enter username" class="form-control" name="username"/>
+        </div>
+    </div>
+    <%- include("_loginEditor") -%>
+    
+    <input type="submit" value="Register" class="btn btn-default btn-primary" />
+  </form>
+
+  
+
+
+
+<%- include("_footer") -%>
