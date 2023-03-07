@@ -85,7 +85,7 @@ app.post("/create", requireLogin, (req, res) => {
   });
 
   // GET /delete/id
-app.get("/delete/:id", requireLogin, (req, res) => {
+app.get("/delete/:id", requireLogin, checkUserRole, (req, res) => {
     const id = req.params.id;
     const loggedInName = req.session.name;
     const sql = "SELECT * FROM claimant WHERE id = ?";
@@ -96,7 +96,7 @@ app.get("/delete/:id", requireLogin, (req, res) => {
   });
 
   // POST /delete/id
-app.post("/delete/:id", requireLogin, (req, res) => {
+app.post("/delete/:id", requireLogin, checkUserRole, (req, res) => {
     const id = req.params.id;
     const sql = "DELETE FROM claimant WHERE id = ?";
     db.run(sql, id, err => {
@@ -162,6 +162,7 @@ app.get("/register", (req, res) =>  {
         console.log("success")
         req.session.email = email;
         req.session.name = row.name;
+        req.session.role = row.role;
         res.redirect('claimants');
       });
   });
@@ -221,6 +222,15 @@ function requireLogin(req, res, next) {
     } else {
       // user is not logged in, so redirect to login page
       res.redirect('/login');
+    }
+  }
+
+  function checkUserRole(req, res, next) {
+    if (req.session.role === 'admin') {
+        next();
+    } else {
+        console.log("Logged in user is not admin")
+        res.redirect('/claimants');
     }
   }
   
