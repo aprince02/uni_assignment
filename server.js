@@ -5,6 +5,7 @@ var db = require("./database.js")
 var md5 = require('md5')
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
 
 app.set("view engine", "ejs");
@@ -17,7 +18,11 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-
+app.use(flash());
+app.use(function(req, res, next){
+    res.locals.message = req.flash();
+    next();
+});
 // Server port
 var HTTP_PORT = 8000 
 // Start server
@@ -61,6 +66,7 @@ app.post("/edit/:id", requireLogin, (req, res) => {
     db.run(sql, claimant, err => {
       // if (err) ...
       console.log("UPDATE: updated claimant details for claimant with ID: %ID%".replace("%ID%", req.params.id))
+      req.flash('success', 'Claimant details updated successfully.');
       res.redirect("/claimants");
     });
   });
@@ -81,6 +87,7 @@ app.post("/create", requireLogin, (req, res) => {
       // if (err) ...
       
     });
+    req.flash('success', 'New claimant added successfully.');
     res.redirect("/claimants");
   });
 
@@ -101,6 +108,7 @@ app.post("/delete/:id", requireLogin, checkUserRole, (req, res) => {
     const sql = "DELETE FROM claimant WHERE id = ?";
     db.run(sql, id, err => {
       // if (err) ...
+      req.flash('success', 'Claimant deleted successfully.');
       res.redirect("/claimants");
     });
   });
@@ -132,6 +140,7 @@ app.get("/register", (req, res) =>  {
       // if (err) ...
       
     });
+    req.flash('success', 'New account created successfully.');
     res.redirect("/");
   });
 
@@ -149,12 +158,14 @@ app.get("/register", (req, res) =>  {
     
         if (!row) {
             console.log("row not found")
+            req.flash('error', 'Invalid email or password.');
           return res.redirect('/login');
         }
         
         if (row.password !== password) {
             console.log(row.password)
             console.log("password not match")
+            req.flash('error', 'Invalid email or password.');
           return res.redirect('/login');
         }
     
@@ -169,6 +180,7 @@ app.get("/register", (req, res) =>  {
 
   app.get('/logout', (req, res) => {
     req.session.destroy();
+    req.flash('success', 'Logged out successfully.');
     res.redirect('/');
 });
 
@@ -190,6 +202,7 @@ app.get("/register", (req, res) =>  {
     const payment = [id, req.body.amount, formatted_date(), pending_status];
     db.run(payment_sql, payment, err => {
       // if (err) ...
+      req.flash('success', 'Payment added successfully.');
       res.redirect("/claimants");
       
     });
@@ -230,6 +243,7 @@ function requireLogin(req, res, next) {
         next();
     } else {
         console.log("Logged in user is not admin")
+        req.flash('error', 'Only Admins are allowed to delete claimants.');
         res.redirect('/claimants');
     }
   }

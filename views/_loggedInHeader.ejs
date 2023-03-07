@@ -19,7 +19,17 @@
           <a class="nav-link" href="/claimants">Claimants</a>
         </li>
       </ul>
-      <a>logged in as <%= loggedInName %></a>
-      <a class="btn btn-outline-dark cancel" href="/logout">Log Out</a>
+      <a style="padding-right: 10px;">logged in as <%= loggedInName %></a>
+      <a class="btn btn-primary" href="/logout">Log Out</a>
     </nav>
-  
+
+<% if (message.success) { %>
+  <div class="alert alert-success">
+      <%= message.success %>
+  </div>
+<% } %>
+<% if (message.error) { %>
+  <div class="alert alert-danger">
+      <%= message.error %>
+  </div>
+<% } %>
