@@ -31,11 +31,12 @@ app.get("/", (req, res) =>  {
 
 app.get("/claimants", requireLogin, (req, res) => {
     const sql = "SELECT * FROM claimant ORDER BY id ASC"
+    const email = req.session.email;
     db.all(sql, [], (err, rows) => {
         if (err) {
           return console.error(err.message);
         }
-    res.render("claimants", {model: rows});
+    res.render("claimants", {model: rows, email: email});
     console.log("GET: view all claimants details")
     });
   });
@@ -112,7 +113,7 @@ app.get("/payments/:id", requireLogin, (req, res) => {
   
     });
 
-app.get("/register", requireLogin, (req, res) =>  {
+app.get("/register", (req, res) =>  {
     res.render("register");
   });
 
@@ -136,15 +137,27 @@ app.get("/register", requireLogin, (req, res) =>  {
     const email = req.body.email;
     const password = req.body.password;
     console.log(email, password);
-
-    // Check if the username and password are valid
-    if (email === 'aprince02@icloud.com' && password === 'albin') {
+    db.get('SELECT * FROM user WHERE email = ?', [email], (err, row) => {
+        if (err) {
+          throw err;
+        }
+    
+        if (!row) {
+            console.log("row not found")
+          return res.redirect('/login');
+        }
+        
+        if (row.password !== password) {
+            console.log(row.password)
+            console.log("password not match")
+          return res.redirect('/login');
+        }
+    
+        // Login successful
+        console.log("success")
         req.session.email = email;
         res.redirect('claimants');
-    } else {
-        console.log("Error")
-        res.render('login', { error: 'Invalid username or password' });
-    }
+      });
   });
 
   app.get('/logout', (req, res) => {
