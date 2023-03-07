@@ -29,19 +29,19 @@ app.get("/", (req, res) =>  {
     res.render("index");
   });
 
-app.get("/claimants", (req, res) => {
+app.get("/claimants", requireLogin, (req, res) => {
     const sql = "SELECT * FROM claimant ORDER BY id ASC"
     db.all(sql, [], (err, rows) => {
         if (err) {
           return console.error(err.message);
         }
-    res.render("claimants", {model: rows });
+    res.render("claimants", {model: rows});
     console.log("GET: view all claimants details")
     });
   });
 
 // GET /edit/id
-app.get("/edit/:id", (req, res) => {
+app.get("/edit/:id", requireLogin, (req, res) => {
     const id = req.params.id;
     const claimant_sql = "SELECT * FROM claimant WHERE id = ?";
     db.get(claimant_sql, id, (err, row) => {
@@ -51,7 +51,7 @@ app.get("/edit/:id", (req, res) => {
   });
 
 // POST /edit/id
-app.post("/edit/:id", (req, res) => {
+app.post("/edit/:id", requireLogin, (req, res) => {
     const id = req.params.id;
     const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, req.body.sort_code, req.body.account_number, id];
     const sql = "UPDATE claimant SET first_name = ?, surname = ?, date_of_birth = ?, sort_code = ?, account_number = ? WHERE (id = ?)";
@@ -63,12 +63,12 @@ app.post("/edit/:id", (req, res) => {
   });
 
   // GET /create
-app.get("/create", (req, res) => {
+app.get("/create", requireLogin, (req, res) => {
     res.render("create", { claimant: {}, bank_account: {} });
   });
 
 // POST /create
-app.post("/create", (req, res) => {
+app.post("/create", requireLogin, (req, res) => {
     const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, sort_code, account_number) VALUES (?, ?, ?, ?, ?, ?)";
     const status = "ACTIVE";
     const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status,  req.body.sort_code, req.body.account_number];
@@ -80,7 +80,7 @@ app.post("/create", (req, res) => {
   });
 
   // GET /delete/id
-app.get("/delete/:id", (req, res) => {
+app.get("/delete/:id", requireLogin, (req, res) => {
     const id = req.params.id;
     const sql = "SELECT * FROM claimant WHERE id = ?";
     db.get(sql, id, (err, row) => {
@@ -90,7 +90,7 @@ app.get("/delete/:id", (req, res) => {
   });
 
   // POST /delete/id
-app.post("/delete/:id", (req, res) => {
+app.post("/delete/:id", requireLogin, (req, res) => {
     const id = req.params.id;
     const sql = "DELETE FROM claimant WHERE id = ?";
     db.run(sql, id, err => {
@@ -99,7 +99,7 @@ app.post("/delete/:id", (req, res) => {
     });
   });
 
-app.get("/payments/:id", (req, res) => {
+app.get("/payments/:id", requireLogin, (req, res) => {
     const id = req.params.id;
     const sql = "SELECT * FROM payments WHERE claimant_id = ?";
     db.all(sql, id, (err, rows) => {
@@ -112,7 +112,7 @@ app.get("/payments/:id", (req, res) => {
   
     });
 
-app.get("/register", (req, res) =>  {
+app.get("/register", requireLogin, (req, res) =>  {
     res.render("register");
   });
 
@@ -152,7 +152,7 @@ app.get("/register", (req, res) =>  {
     res.redirect('/');
 });
 
-  app.get("/add-payment/:id", (req, res) => {
+  app.get("/add-payment/:id", requireLogin, (req, res) => {
     const id = req.params.id;
     const payments_sql = "SELECT * FROM payments WHERE id = ?";
     db.get(payments_sql, id, (err, row) => {
@@ -161,7 +161,7 @@ app.get("/register", (req, res) =>  {
     });
   });
 
-  app.post("/add-payment/:id", (req, res) => {
+  app.post("/add-payment/:id", requireLogin, (req, res) => {
     const payment_sql = "INSERT INTO payments (claimant_id, amount, date, payment_status) VALUES (?, ?, ?, ?)";
     const pending_status = "PENDING";
     const id = req.params.id;
