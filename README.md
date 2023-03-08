@@ -40,3 +40,38 @@ This endpoint creates a new claimant and inserts the details into the claimant d
 #### Method: `POST`
 
 This endpoint uses the id that is passed in the path to find and delete a claimant from the database table. Before this endpoint runs the sql delete query, it utilises the `checkUserRole` function to make sure that the logged in user has the role `admin`. 
+
+## API 6
+
+### Path: `/payments/id`
+#### Method: `GET`
+
+This endpoint uses the id passed in the path to retrieve all the payments associated with the claimant. 
+
+## API 7
+
+### Path: `/add-payment/id`
+#### Method: `POST`
+
+This endpoint adds a new payment record to the payments database table with the assocating claimant id that is passed in the path.
+
+## API 8
+
+### Path: `/register`
+#### Method: `POST`
+
+This endpoint creates a new entry in the user database table with the data that is passed in the body with the role `user`.
+
+## API 9
+
+### Path: `/login`
+#### Method: `POST`
+
+This endpoint checks the submitted email and password against stored login details in the user database table. 
+
+## API 10
+
+### Path: `/logout`
+#### Method: `GET`
+
+This endpoint destroys the current session that is stored, so that the logged in details are not stored anymore. 

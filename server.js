@@ -127,6 +127,30 @@ app.get("/payments/:id", requireLogin, (req, res) => {
   
     });
 
+    app.get("/add-payment/:id", requireLogin, (req, res) => {
+        const id = req.params.id;
+        const loggedInName = req.session.name;
+        const payments_sql = "SELECT * FROM payments WHERE id = ?";
+        db.get(payments_sql, id, (err, row) => {
+          // if (err) ...
+          res.render("add-payment", { claimant: row, id: id, loggedInName: loggedInName });
+        });
+      });
+    
+      app.post("/add-payment/:id", requireLogin, (req, res) => {
+        const payment_sql = "INSERT INTO payments (claimant_id, amount, date, payment_status) VALUES (?, ?, ?, ?)";
+        const pending_status = "PENDING";
+        const id = req.params.id;
+        
+        const payment = [id, req.body.amount, formatted_date(), pending_status];
+        db.run(payment_sql, payment, err => {
+          // if (err) ...
+          req.flash('success', 'Payment added successfully.');
+          res.redirect("/claimants");
+          
+        });
+      });
+
 app.get("/register", (req, res) =>  {
     res.render("register");
   });
@@ -183,30 +207,6 @@ app.get("/register", (req, res) =>  {
     req.flash('success', 'Logged out successfully.');
     res.redirect('/');
 });
-
-  app.get("/add-payment/:id", requireLogin, (req, res) => {
-    const id = req.params.id;
-    const loggedInName = req.session.name;
-    const payments_sql = "SELECT * FROM payments WHERE id = ?";
-    db.get(payments_sql, id, (err, row) => {
-      // if (err) ...
-      res.render("add-payment", { claimant: row, id: id, loggedInName: loggedInName });
-    });
-  });
-
-  app.post("/add-payment/:id", requireLogin, (req, res) => {
-    const payment_sql = "INSERT INTO payments (claimant_id, amount, date, payment_status) VALUES (?, ?, ?, ?)";
-    const pending_status = "PENDING";
-    const id = req.params.id;
-    
-    const payment = [id, req.body.amount, formatted_date(), pending_status];
-    db.run(payment_sql, payment, err => {
-      // if (err) ...
-      req.flash('success', 'Payment added successfully.');
-      res.redirect("/claimants");
-      
-    });
-  });
 
 // Default response for any other request
 app.use(function(req, res){
