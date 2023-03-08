@@ -1,16 +1,20 @@
 <%- include("_header") -%>
 
 <h1>Login page</h1>
+<%= message.success %>
+<% if (message.success) { %>
+  <div class="alert alert-success">
+      <%= message.success %>
+  </div>
+<% } %>
+<% if (message.error) { %>
+  <div class="alert alert-danger">
+      <%= message.error %>
+  </div>
+<% } %>
 
-<form>
-      <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
-    <div class="form-group">
-      <label for="exampleInputPassword1">Password</label>
-      <input required type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-    </div>
+<form method="POST" action="/login">
+    <%- include("_loginEditor") -%>
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
 

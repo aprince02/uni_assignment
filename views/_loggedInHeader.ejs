@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Assignment</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Home</a>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/claimants">Claimants</a>
+        </li>
+      </ul>
+      <a style="padding-right: 10px;">logged in as <%= loggedInName %></a>
+      <a class="btn btn-primary" href="/logout">Log Out</a>
+    </nav>
+
+<% if (message.success) { %>
+  <div class="alert alert-success">
+      <%= message.success %>
+  </div>
+<% } %>
+<% if (message.error) { %>
+  <div class="alert alert-danger">
+      <%= message.error %>
+  </div>
+<% } %>
