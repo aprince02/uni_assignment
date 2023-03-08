@@ -6,6 +6,35 @@ The application is used to initiate payments that need to be paid to the claiman
 
 There will be three database tables including users, claimant, and payments. 
 
+**User Table**
+| COLUMN | TYPE |
+|--|--|
+|id|INTEGER|
+|name|TEXT|
+|email|TEXT|
+|password|TEXT|
+|role|TEXT|
+
+**Claimant Table**
+| COLUMN | TYPE |
+|--|--|
+|id|INTEGER|
+|first_name|TEXT|
+|surname|TEXT|
+|date_of_birth|DATE|
+|claim_status|TEXT|
+|sort_code|INTEGER|
+|account_number|INTEGER|
+
+**Payments Table**
+| COLUMN | TYPE |
+|--|--|
+|id|INTEGER|
+|claimant_id|INTEGER|
+|amount|TEXT|
+|date|DATE|
+|payment_status|TEXT|
+
 ## API 1
 
 ### Path: `/claimants`
@@ -75,3 +104,4 @@ This endpoint checks the submitted email and password against stored login detai
 #### Method: `GET`
 
 This endpoint destroys the current session that is stored, so that the logged in details are not stored anymore. 
+
