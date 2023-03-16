@@ -2,11 +2,11 @@
 var express = require("express")
 var app = express()
 var db = require("./database.js")
-var md5 = require('md5')
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -157,12 +157,17 @@ app.get("/register", (req, res) =>  {
 
   app.post("/register", (req, res) => {
     const user_sql = "INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)";
-    const password = md5(req.body.password);
-    const role = "user";
-    const user = [req.body.username, req.body.email, password, role];
-    db.run(user_sql, user, err => {
-      // if (err) ...
+    var password = req.body.password;
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+            const role = "user";
+            const user = [req.body.username, req.body.email, hash, role];
+            db.run(user_sql, user, err => {
+                // if (err) ...
       
+            });
+            console.log(hash);
+        });
     });
     req.flash('success', 'New account created successfully.');
     res.redirect("/");
@@ -185,26 +190,25 @@ app.get("/register", (req, res) =>  {
             req.flash('error', 'Invalid email or password.');
           return res.redirect('/login');
         }
-        
-        if (row.password !== password) {
-            console.log(row.password)
-            console.log("password not match")
-            req.flash('error', 'Invalid email or password.');
-          return res.redirect('/login');
-        }
-    
-        // Login successful
-        console.log("success")
-        req.session.email = email;
-        req.session.name = row.name;
-        req.session.role = row.role;
-        res.redirect('claimants');
+
+        bcrypt.compare(password, row.password, function(err, result){
+            if (err){
+                console.log(err.message);
+            } else if (result === true) {
+                req.session.email = email;
+                req.session.name = row.name;
+                req.session.role = row.role;
+                res.redirect('claimants');
+            } else {
+                req.flash('error', 'Invalid email or password.');
+                return res.redirect('/login');
+            }
+        });     
       });
   });
 
   app.get('/logout', (req, res) => {
     req.session.destroy();
-    req.flash('success', 'Logged out successfully.');
     res.redirect('/');
 });
 
