@@ -1,5 +1,4 @@
 var sqlite3 = require('sqlite3').verbose()
-
 const DBSOURCE = "db.sqlite"
 
 let db = new sqlite3.Database(DBSOURCE, (err) => {
@@ -24,8 +23,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             }else{
                 // Table just created, creating some rows
                 var insert_users = 'INSERT INTO user (name, email, password, role) VALUES (?,?,?,?)'
-                db.run(insert_users, ["admin","admin@example.com","$2b$10$TEqkogB4bpO1GzuideQDnuZ/y5.cAadvBs.Jf8sPnKuxltnggbMW6", "admin"])
-                db.run(insert_users, ["user","user@example.com","$2b$10$KJeGw7RzycSNc7aDKoN0UeWkxosTqKKDG0yAQ3rW8ybwnTkH2ux1S", "user"])
+                db.run(insert_users, ["admin","admin@example.com","$2b$10$LShoUAWkUqUFUl.9VbEGEeiqACW3PZgEUPZEDCCL6MXTwuAM8CvrO", "admin"])
+                db.run(insert_users, ["user","user@example.com","$2b$10$cwJOkKGK9vrKy8nNbUJzFeRzRUqtgvue//8TE871zuVyLelonlR6.", "user"])
             }
         }); 
         db.run(`CREATE TABLE claimant (
@@ -72,6 +71,5 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         )
     }
 });
-
 
 module.exports = db
