@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afa7abc0-9062-42de-9017-b3beb9fa2cec" name="Changes" comment="" />
+    <list default="true" id="afa7abc0-9062-42de-9017-b3beb9fa2cec" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/views/claimants.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/claimants.ejs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

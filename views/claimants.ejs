@@ -18,7 +18,7 @@
     </thead>
     <tbody>
       <% for (const claimant of model) { %>
-        <tr>
+        <tr><a href="/edit/<%= claimant.id %>">
           <td ><a href="/edit/<%= claimant.id %>"><%= claimant.id %></a></td>
           <td><a href="/edit/<%= claimant.id %>"><%= claimant.first_name %></a></td>
           <td><a href="/edit/<%= claimant.id %>"><%= claimant.surname %></a></td>
@@ -29,6 +29,7 @@
             <a class="btn btn-sm btn-warning" href="/edit/<%= claimant.id %>">Edit</a>
             <a class="btn btn-sm btn-danger" href="/delete/<%= claimant.id %>">Delete</a>
           </td>
+        </a>
         </tr>
       <% } %>
     </tbody>
