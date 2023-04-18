@@ -18,9 +18,9 @@ The application is used to initiate payments that need to be paid to the claiman
 
  
 > To login as an admin user use these credentials:
-> `email: admin@example.com`
-> `password: admin`
+> `email: admin@admin.com`
+> `password: Admin@2002`
 
 > To login as a basic user use these credentials:
 > `email: user@example.com`
-> `password: user`
+> `password: User@1234`
