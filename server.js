@@ -66,6 +66,7 @@ app.post("/edit/:id", requireLogin, (req, res) => {
             console.log(err.message);
         } else {
             req.flash('success', 'Claimant details updated successfully.');
+            console.info("claimant details have been updated successfully for claimant with id: " + id )
             res.redirect("/claimants");
         }});
     });
@@ -83,9 +84,10 @@ app.post("/create", requireLogin, (req, res) => {
     const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status,  req.body.sort_code, req.body.account_number];
     db.run(claimant_sql, claimant, err => {
         if (err) {
-            console.log(err.message);
+            console.log("Error adding new claimant: " + err.message);
         } else {
             req.flash('success', 'New claimant added successfully.');
+            console.info("New claimant with first name: " + req.body.first_name + " added successfully" )
             res.redirect("/claimants");
         }}); 
     });
@@ -112,6 +114,7 @@ app.post("/delete/:id", requireLogin, checkUserRole, (req, res) => {
             console.log(err.message);
         } else {
             req.flash('success', 'Claimant deleted successfully.');
+            console.info("claimant with id: " + id + " has been deleted successfully" )
             res.redirect("/claimants");
         }});
     });
@@ -155,6 +158,7 @@ app.post("/add-payment/:id", requireLogin, (req, res) => {
             return console.error(err.message);
         } else {
             req.flash('success', 'Payment added successfully.');
+            console.info("new payment has been added for claimant with id: " + id)
             res.redirect("/claimants"); 
         }});
     });
@@ -179,6 +183,7 @@ app.post("/register", (req, res) => {
                     return res.redirect("/register")
                 } else {
                     req.flash('success', 'New account created successfully.');
+                    console.info("new user account has been added with username: " + req.body.username)
                     return res.redirect("/login");
                 }});
         });
@@ -199,6 +204,7 @@ app.post("/login", (req, res) =>  {
         throw err;
     }else if (!row) {
         req.flash('error', 'Invalid email or password.');
+        console.error("Tried to login with incorrect email or password")
         return res.redirect('/login');
     }
 
@@ -209,9 +215,11 @@ app.post("/login", (req, res) =>  {
             req.session.email = email;
             req.session.name = row.name;
             req.session.role = row.role;
+            console.info("User logged in successfully")
             res.redirect('claimants');
         } else {
             req.flash('error', 'Invalid email or password.');
+            console.error("Tried to login with incorrect email or password")
             return res.redirect('/login');
         }});     
     });
@@ -263,3 +271,5 @@ function checkUserRole(req, res, next) {
         req.flash('error', 'Only Admins are allowed to delete claimants.');
         res.redirect('/claimants');
     }}
+
+    module.exports = app;
