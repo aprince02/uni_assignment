@@ -6,6 +6,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const validator = require('validator');
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -59,17 +60,32 @@ app.get("/edit/:id", requireLogin, (req, res) => {
 // POST /edit/id
 app.post("/edit/:id", requireLogin, (req, res) => {
     const id = req.params.id;
-    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, req.body.sort_code, req.body.account_number, id];
+
+    // Validate and sanitize input fields
+    const first_name = validator.escape(req.body.first_name.trim());
+    const surname = validator.escape(req.body.surname.trim());
+    const date_of_birth = validator.toDate(req.body.date_of_birth);
+    const sort_code = validator.escape(req.body.sort_code.trim());
+    const account_number = validator.escape(req.body.account_number.trim());
+
+    // Check if inputs are valid
+    if (!first_name || !surname || !date_of_birth || !sort_code || !account_number) {
+        return res.status(400).send("Invalid input data");
+    }
+    const claimant = [first_name, surname, date_of_birth, sort_code, account_number, id];
     const sql = "UPDATE claimant SET first_name = ?, surname = ?, date_of_birth = ?, sort_code = ?, account_number = ? WHERE (id = ?)";
     db.run(sql, claimant, err => {
         if (err) {
-            console.log(err.message);
+            console.error(err.message);
+            return res.status(500).send("Internal Server Error");
         } else {
             req.flash('success', 'Claimant details updated successfully.');
-            console.info("claimant details have been updated successfully for claimant with id: " + id )
-            res.redirect("/claimants");
-        }});
+            console.info("Claimant details have been updated successfully for claimant with id: " + id )
+            return res.redirect("/claimants");
+        }
     });
+});
+
 
 // GET /create
 app.get("/create", requireLogin, (req, res) => {
@@ -79,18 +95,35 @@ app.get("/create", requireLogin, (req, res) => {
 
 // POST /create
 app.post("/create", requireLogin, (req, res) => {
+    // Validate and sanitize input fields
+    const first_name = validator.escape(req.body.first_name.trim());
+    const surname = validator.escape(req.body.surname.trim());
+    const date_of_birth = validator.toDate(req.body.date_of_birth);
+    const sort_code = validator.escape(req.body.sort_code.trim());
+    const account_number = validator.escape(req.body.account_number.trim());
+
+    // Check if inputs are valid
+    if (!first_name || !surname || !date_of_birth || !sort_code || !account_number) {
+        req.flash('error', 'Invalid input data');
+        return res.redirect("/"); // Redirect to index page
+    }
+
     const claimant_sql = "INSERT INTO claimant (first_name, surname, date_of_birth, claim_status, sort_code, account_number) VALUES (?, ?, ?, ?, ?, ?)";
     const status = "ACTIVE";
-    const claimant = [req.body.first_name, req.body.surname, req.body.date_of_birth, status,  req.body.sort_code, req.body.account_number];
+    const claimant = [first_name, surname, date_of_birth, status, sort_code, account_number];
+
     db.run(claimant_sql, claimant, err => {
         if (err) {
-            console.log("Error adding new claimant: " + err.message);
+            console.error("Error adding new claimant: " + err.message);
+            req.flash('error', 'An error occurred while adding the new claimant');
         } else {
             req.flash('success', 'New claimant added successfully.');
-            console.info("New claimant with first name: " + req.body.first_name + " added successfully" )
-            res.redirect("/claimants");
-        }}); 
-    });
+            console.info("New claimant with first name: " + first_name + " added successfully" );
+        }
+        res.redirect("/claimants");
+    }); 
+});
+
 
 // GET /delete/id
 app.get("/delete/:id", requireLogin, checkUserRole, (req, res) => {
